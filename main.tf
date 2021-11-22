@@ -19,7 +19,8 @@ resource "metal_reserved_ip_block" "harvester_vip" {
 
 
 resource "metal_device" "seed" {
-  hostname         = "harvester-pxe-1"
+  hostname         = "${var.hostname_prefix}-1"
+  count            = var.node_count >= 1 ? 1 : 0
   plan             = var.plan
   metro            = var.metro
   operating_system = "custom_ipxe"
@@ -27,11 +28,11 @@ resource "metal_device" "seed" {
   project_id       = data.metal_project.project.project_id
   ipxe_script_url  = var.ipxe_script
   always_pxe       = "false"
-  user_data        = templatefile("${path.module}/create.tpl", { password = random_password.password.result, token = random_password.token.result, vip = metal_reserved_ip_block.harvester_vip.network })
+  user_data        = templatefile("${path.module}/create.tpl", { password = random_password.password.result, token = random_password.token.result, vip = metal_reserved_ip_block.harvester_vip.network, hostname_prefix = var.hostname_prefix, count = "1" })
 }
 
 resource "metal_ip_attachment" "first_address_assignment" {
-  device_id = metal_device.seed.id
+  device_id = metal_device.seed.0.id
   cidr_notation = join("/", [cidrhost(metal_reserved_ip_block.harvester_vip.cidr_notation, 0), "32"])
 }
 
@@ -46,5 +47,5 @@ resource "metal_device" "join" {
   project_id       = data.metal_project.project.project_id
   ipxe_script_url  = var.ipxe_script
   always_pxe       = "false"
-  user_data        = templatefile("${path.module}/join.tpl", { password = random_password.password.result, token = random_password.token.result, seed = metal_device.seed.access_public_ipv4 })
+  user_data        = templatefile("${path.module}/join.tpl", { password = random_password.password.result, token = random_password.token.result, seed = metal_device.seed.0.access_public_ipv4,  hostname_prefix = var.hostname_prefix, count = "${count.index +2}" })
 }

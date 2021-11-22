@@ -25,3 +25,7 @@ variable facility {
 variable ipxe_script {
     default = "https://raw.githubusercontent.com/ibrokethecloud/custom_pxe/master/harvester.ipxe"
 }
+
+variable hostname_prefix {
+    default = "harvester-pxe"
+}

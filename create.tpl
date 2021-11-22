@@ -4,6 +4,7 @@ os:
   ssh_authorized_keys:
   - github:ibrokethecloud
   password: "${password}"  # replace with a your password
+  hostname: "${hostname_prefix}-${count}"
 install:
   mode: create
   networks:
