@@ -36,7 +36,6 @@ resource "metal_ip_attachment" "first_address_assignment" {
   cidr_notation = join("/", [cidrhost(metal_reserved_ip_block.harvester_vip.cidr_notation, 0), "32"])
 }
 
-
 resource "metal_device" "join" {
   hostname         = "harvester-pxe-${count.index +2}"
   count            = "${var.node_count -1}"

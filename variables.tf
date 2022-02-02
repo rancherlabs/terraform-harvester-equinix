@@ -1,5 +1,5 @@
 variable node_count {
-    default = "3"
+    default = "2"
 }
 
 variable project_name {
@@ -23,7 +23,7 @@ variable facility {
 }
 
 variable ipxe_script {
-    default = "https://raw.githubusercontent.com/ibrokethecloud/custom_pxe/master/harvester.ipxe"
+    default = "https://raw.githubusercontent.com/ibrokethecloud/custom_pxe/master/mac.ipxe"
 }
 
 variable hostname_prefix {
