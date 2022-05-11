@@ -8,7 +8,7 @@ os:
 install:
   mode: create
   device: /dev/sda
-  iso_url: https://releases.rancher.com/harvester/v1.0.0/harvester-v1.0.0-amd64.iso
+  iso_url: https://releases.rancher.com/harvester/v1.0.1/harvester-v1.0.1-amd64.iso
   tty: ttyS1,115200n8
   vip: ${vip}
   vip_mode: static
