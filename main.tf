@@ -37,7 +37,7 @@ resource "equinix_metal_spot_market_request" "seed_spot_request" {
   facilities    = [var.facility]
   devices_min   = 1
   devices_max   = 1
-# wait_for_devices = true
+  wait_for_devices = true
 
   instance_parameters {
     hostname         = "${var.hostname_prefix}-1"
@@ -91,5 +91,5 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
 }
 
 output "harvester_url" {
-  value = "https://${equinix_metal_reserved_ip_block.harvester_vip.network}:8443/"
+  value = "https://${equinix_metal_reserved_ip_block.harvester_vip.network}/"
 }
