@@ -1,5 +1,5 @@
 #cloud-config
-server_url: https://${seed}:8443
+server_url: https://${seed}:443
 token: "${token}"
 os:
   ssh_authorized_keys:
