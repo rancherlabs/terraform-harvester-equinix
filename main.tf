@@ -106,6 +106,7 @@ resource "equinix_metal_device_network_type" "seed_nw_type" {
 }
 
 resource "equinix_metal_port_vlan_attachment" "vlan_attach" {
+   count = var.num_of_vlans >=1 ? 1 : 0
    device_id = equinix_metal_device_network_type.seed_nw_type.id 
    vlan_vnid = equinix_metal_vlan.vlans.0.vxlan
    port_name = data.equinix_metal_device.seed_device.ports[1].name
