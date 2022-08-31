@@ -48,3 +48,13 @@ variable ssh_key {
     default     = ""
     description = "Your ssh key, examples: 'github: myghid' or 'ssh-rsa AAAAblahblah== keyname'" 
 }
+
+variable num_of_vlans {
+  default = 0
+  description = "Number of VLANs to be created"
+}
+
+variable network_type {
+  default = "hybrid"
+  description = "Choose network type from layer3, hybrid, layer2-individual and layer2-bonded"
+}

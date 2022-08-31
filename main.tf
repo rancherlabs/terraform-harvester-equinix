@@ -90,6 +90,27 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   }
 }
 
+data "equinix_metal_device" "seed_device" {
+   device_id = data.equinix_metal_spot_market_request.seed_req.0.device_ids[0]
+}
+
+resource "equinix_metal_vlan" "vlans" {
+  count = var.num_of_vlans
+  project_id = data.equinix_metal_project.project.project_id
+  facility = var.facility
+}
+
+resource "equinix_metal_device_network_type" "seed_nw_type" {
+  device_id = data.equinix_metal_device.seed_device.id
+  type      = "hybrid"
+}
+
+resource "equinix_metal_port_vlan_attachment" "vlan_attach" {
+   device_id = equinix_metal_device_network_type.seed_nw_type.id 
+   vlan_vnid = equinix_metal_vlan.vlans.0.vxlan
+   port_name = data.equinix_metal_device.seed_device.ports[1].name
+}
+  
 output "harvester_url" {
   value = "https://${equinix_metal_reserved_ip_block.harvester_vip.network}/"
 }
