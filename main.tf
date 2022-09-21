@@ -90,6 +90,11 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   }
 }
 
+data "equinix_metal_spot_market_request" "join_req" {
+  count      = var.spot_instance ? var.node_count -1 : 0
+  request_id = equinix_metal_spot_market_request.join_spot_request[count.index].id
+}
+
 data "equinix_metal_device" "seed_device" {
    device_id = data.equinix_metal_spot_market_request.seed_req.0.device_ids[0]
 }
@@ -100,18 +105,30 @@ resource "equinix_metal_vlan" "vlans" {
   facility = var.facility
 }
 
-resource "equinix_metal_device_network_type" "seed_nw_type" {
-  device_id = data.equinix_metal_device.seed_device.id
-  type      = "hybrid"
+locals {
+  device_ids = flatten([ data.equinix_metal_spot_market_request.join_req[*].device_ids ])
+  vlan_ids  = flatten([ equinix_metal_vlan.vlans[*].vxlan])
+  vlan_device_attach = {for val in setproduct(local.device_ids, local.vlan_ids): "${val[0]}-${val[1]}" => val}
+
 }
 
-resource "equinix_metal_port_vlan_attachment" "vlan_attach" {
-   count = var.num_of_vlans >=1 ? 1 : 0
-   device_id = equinix_metal_device_network_type.seed_nw_type.id 
-   vlan_vnid = equinix_metal_vlan.vlans.0.vxlan
-   port_name = data.equinix_metal_device.seed_device.ports[1].name
+resource "equinix_metal_port_vlan_attachment" "vlan_attach_seed" {
+
+   count = var.num_of_vlans 
+   device_id = data.equinix_metal_device.seed_device.id
+   vlan_vnid = equinix_metal_vlan.vlans[count.index].vxlan
+   port_name = "bond0" 
+}
+
+resource "equinix_metal_port_vlan_attachment" "vlan_attach_join" {
+
+   for_each =  local.vlan_device_attach 
+   device_id = each.value[0]
+   vlan_vnid = each.value[1]
+   port_name = "bond0" 
 }
   
 output "harvester_url" {
   value = "https://${equinix_metal_reserved_ip_block.harvester_vip.network}/"
 }
+
