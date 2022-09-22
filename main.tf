@@ -79,6 +79,7 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   facilities    = [var.facility]
   devices_min   = 1
   devices_max   = 1
+  wait_for_devices = true
 
   instance_parameters {
     hostname         = "${var.hostname_prefix}-${count.index + 2}"
@@ -99,17 +100,15 @@ data "equinix_metal_device" "seed_device" {
    device_id = data.equinix_metal_spot_market_request.seed_req.0.device_ids[0]
 }
 
+data "equinix_metal_device" "join_devices" {
+   count     = var.node_count - 1
+   device_id = data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0]
+}
+
 resource "equinix_metal_vlan" "vlans" {
   count = var.num_of_vlans
   project_id = data.equinix_metal_project.project.project_id
   facility = var.facility
-}
-
-locals {
-  device_ids = flatten([ data.equinix_metal_spot_market_request.join_req[*].device_ids ])
-  vlan_ids  = flatten([ equinix_metal_vlan.vlans[*].vxlan])
-  vlan_device_attach = {for val in setproduct(local.device_ids, local.vlan_ids): "${val[0]}-${val[1]}" => val}
-
 }
 
 resource "equinix_metal_port_vlan_attachment" "vlan_attach_seed" {
@@ -122,9 +121,9 @@ resource "equinix_metal_port_vlan_attachment" "vlan_attach_seed" {
 
 resource "equinix_metal_port_vlan_attachment" "vlan_attach_join" {
 
-   for_each =  local.vlan_device_attach 
-   device_id = each.value[0]
-   vlan_vnid = each.value[1]
+   count = var.num_of_vlans * (var.node_count - 1)
+   device_id = data.equinix_metal_device.join_devices[count.index % (var.node_count - 1)].id
+   vlan_vnid = equinix_metal_vlan.vlans[floor(count.index / var.num_of_vlans)].vxlan
    port_name = "bond0" 
 }
   
