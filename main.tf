@@ -123,7 +123,7 @@ resource "equinix_metal_port_vlan_attachment" "vlan_attach_join" {
 
    count = var.num_of_vlans * (var.node_count - 1)
    device_id = data.equinix_metal_device.join_devices[count.index % (var.node_count - 1)].id
-   vlan_vnid = equinix_metal_vlan.vlans[floor(count.index / var.num_of_vlans)].vxlan
+   vlan_vnid = equinix_metal_vlan.vlans[floor(count.index / (var.node_count - 1))].vxlan
    port_name = "bond0" 
 }
   
