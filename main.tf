@@ -79,6 +79,7 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   facilities    = [var.facility]
   devices_min   = 1
   devices_max   = 1
+  wait_for_devices = true
 
   instance_parameters {
     hostname         = "${var.hostname_prefix}-${count.index + 2}"
@@ -90,6 +91,43 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   }
 }
 
+data "equinix_metal_spot_market_request" "join_req" {
+  count      = var.spot_instance ? var.node_count -1 : 0
+  request_id = equinix_metal_spot_market_request.join_spot_request[count.index].id
+}
+
+data "equinix_metal_device" "seed_device" {
+   device_id = data.equinix_metal_spot_market_request.seed_req.0.device_ids[0]
+}
+
+data "equinix_metal_device" "join_devices" {
+   count     = var.node_count - 1
+   device_id = data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0]
+}
+
+resource "equinix_metal_vlan" "vlans" {
+  count = var.num_of_vlans
+  project_id = data.equinix_metal_project.project.project_id
+  facility = var.facility
+}
+
+resource "equinix_metal_port_vlan_attachment" "vlan_attach_seed" {
+
+   count = var.num_of_vlans 
+   device_id = data.equinix_metal_device.seed_device.id
+   vlan_vnid = equinix_metal_vlan.vlans[count.index].vxlan
+   port_name = "bond0" 
+}
+
+resource "equinix_metal_port_vlan_attachment" "vlan_attach_join" {
+
+   count = var.num_of_vlans * (var.node_count - 1)
+   device_id = data.equinix_metal_device.join_devices[count.index % (var.node_count - 1)].id
+   vlan_vnid = equinix_metal_vlan.vlans[floor(count.index / (var.node_count - 1))].vxlan
+   port_name = "bond0" 
+}
+  
 output "harvester_url" {
   value = "https://${equinix_metal_reserved_ip_block.harvester_vip.network}/"
 }
+

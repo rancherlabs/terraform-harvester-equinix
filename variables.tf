@@ -48,3 +48,8 @@ variable ssh_key {
     default     = ""
     description = "Your ssh key, examples: 'github: myghid' or 'ssh-rsa AAAAblahblah== keyname'" 
 }
+
+variable num_of_vlans {
+  default = 0
+  description = "Number of VLANs to be created"
+}
