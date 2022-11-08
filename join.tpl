@@ -1,4 +1,5 @@
 #cloud-config
+scheme_version: 1
 server_url: https://${seed}:443
 token: "${token}"
 os:
