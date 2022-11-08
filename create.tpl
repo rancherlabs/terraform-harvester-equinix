@@ -1,4 +1,5 @@
 #cloud-config
+scheme_version: 1
 token: "${token}"
 os:
   ssh_authorized_keys:
