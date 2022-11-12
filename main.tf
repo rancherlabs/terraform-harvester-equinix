@@ -27,7 +27,7 @@ resource "equinix_metal_device" "seed" {
   project_id       = data.equinix_metal_project.project.project_id
   ipxe_script_url  = var.ipxe_script
   always_pxe       = "false"
-  user_data        = templatefile("${path.module}/create.tpl", { version = var.harvester_version, password = random_password.password.result, token = random_password.token.result, vip = equinix_metal_reserved_ip_block.harvester_vip.network, hostname_prefix = var.hostname_prefix, ssh_key = var.ssh_key, count = "1" })
+  user_data        = templatefile("${path.module}/create.tpl", { version = var.harvester_version, password = random_password.password.result, token = random_password.token.result, vip = equinix_metal_reserved_ip_block.harvester_vip.network, hostname_prefix = var.hostname_prefix, ssh_key = var.ssh_key, count = "1", cluster_registration_url = var.rancher_api_url != "" ? rancher2_cluster.rancher_cluster[0].cluster_registration_token[0].manifest_url : "" })
 }
 
 resource "equinix_metal_spot_market_request" "seed_spot_request" {
@@ -45,7 +45,7 @@ resource "equinix_metal_spot_market_request" "seed_spot_request" {
     operating_system = "custom_ipxe"
     ipxe_script_url  = var.ipxe_script
     plan             = var.plan
-    userdata         = templatefile("${path.module}/create.tpl", { version = var.harvester_version, password = random_password.password.result, token = random_password.token.result, vip = equinix_metal_reserved_ip_block.harvester_vip.network, hostname_prefix = var.hostname_prefix, ssh_key = var.ssh_key, count = "1" })
+    userdata         = templatefile("${path.module}/create.tpl", { version = var.harvester_version, password = random_password.password.result, token = random_password.token.result, vip = equinix_metal_reserved_ip_block.harvester_vip.network, hostname_prefix = var.hostname_prefix, ssh_key = var.ssh_key, count = "1", cluster_registration_url = var.rancher_api_url != "" ? rancher2_cluster.rancher_cluster[0].cluster_registration_token[0].manifest_url : "" })
   }
 }
 
@@ -125,6 +125,12 @@ resource "equinix_metal_port_vlan_attachment" "vlan_attach_join" {
    device_id = data.equinix_metal_device.join_devices[count.index % (var.node_count - 1)].id
    vlan_vnid = equinix_metal_vlan.vlans[floor(count.index / (var.node_count - 1))].vxlan
    port_name = "bond0" 
+}
+
+resource "rancher2_cluster" "rancher_cluster" {
+  name = var.hostname_prefix
+  count = var.rancher_api_url != "" ? 1 : 0
+  description = "${var.hostname_prefix} created by Terraform"
 }
   
 output "harvester_url" {

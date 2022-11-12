@@ -53,3 +53,18 @@ variable num_of_vlans {
   default = 0
   description = "Number of VLANs to be created"
 }
+
+variable rancher_api_url {
+  default     = ""
+  description = "Rancher API endpoint to manager your Harvester cluster"
+}
+
+variable rancher_access_key {
+  default     = ""
+  description = "Rancher access key"
+}
+
+variable rancher_secret_key {
+  default     = ""
+  description = "Rancher secret key"
+}

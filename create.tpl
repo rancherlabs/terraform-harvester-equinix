@@ -13,3 +13,8 @@ install:
   tty: ttyS1,115200n8
   vip: ${vip}
   vip_mode: static
+
+%{ if cluster_registration_url != "" }
+system_settings:
+  cluster-registration-url: ${cluster_registration_url}
+%{ endif }
