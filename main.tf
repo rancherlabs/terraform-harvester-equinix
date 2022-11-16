@@ -49,6 +49,11 @@ resource "equinix_metal_spot_market_request" "seed_spot_request" {
   }
 }
 
+data "equinix_metal_device" "seed" {
+  count = var.node_count >= 1 && !var.spot_instance ? 1 : 0
+  device_id = equinix_metal_device.seed.0.id
+}
+
 data "equinix_metal_spot_market_request" "seed_req" {
   count      = var.spot_instance ? 1 : 0
   request_id = equinix_metal_spot_market_request.seed_spot_request.0.id
@@ -96,13 +101,18 @@ data "equinix_metal_spot_market_request" "join_req" {
   request_id = equinix_metal_spot_market_request.join_spot_request[count.index].id
 }
 
+data "equinix_metal_device" "join" {
+  count = var.spot_instance ? 0 : var.node_count -1
+  device_id = equinix_metal_device.join[count.index].id
+}
+
 data "equinix_metal_device" "seed_device" {
-   device_id = data.equinix_metal_spot_market_request.seed_req.0.device_ids[0]
+   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.seed_req.0.device_ids[0] : data.equinix_metal_device.seed.0.device_id
 }
 
 data "equinix_metal_device" "join_devices" {
    count     = var.node_count - 1
-   device_id = data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0]
+   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0] : data.equinix_metal_device.join[count.index].device_id
 }
 
 resource "equinix_metal_vlan" "vlans" {
