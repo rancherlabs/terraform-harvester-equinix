@@ -49,11 +49,6 @@ resource "equinix_metal_spot_market_request" "seed_spot_request" {
   }
 }
 
-data "equinix_metal_device" "seed" {
-  count = var.node_count >= 1 && !var.spot_instance ? 1 : 0
-  device_id = equinix_metal_device.seed.0.id
-}
-
 data "equinix_metal_spot_market_request" "seed_req" {
   count      = var.spot_instance ? 1 : 0
   request_id = equinix_metal_spot_market_request.seed_spot_request.0.id
@@ -74,7 +69,7 @@ resource "equinix_metal_device" "join" {
   project_id       = data.equinix_metal_project.project.project_id
   ipxe_script_url  = var.ipxe_script
   always_pxe       = "false"
-  user_data        = templatefile("${path.module}/join.tpl", { version = var.harvester_version, password = random_password.password.result, token = random_password.token.result, seed = equinix_metal_device.seed.0.access_public_ipv4,  hostname_prefix = var.hostname_prefix, ssh_key = var.ssh_key, count = "${count.index + 2}" })
+  user_data        = templatefile("${path.module}/join.tpl", { version = var.harvester_version, password = random_password.password.result, token = random_password.token.result, seed = equinix_metal_reserved_ip_block.harvester_vip.network, hostname_prefix = var.hostname_prefix, ssh_key = var.ssh_key, count = "${count.index + 2}" })
 }
 
 resource "equinix_metal_spot_market_request" "join_spot_request" {
@@ -101,18 +96,13 @@ data "equinix_metal_spot_market_request" "join_req" {
   request_id = equinix_metal_spot_market_request.join_spot_request[count.index].id
 }
 
-data "equinix_metal_device" "join" {
-  count = var.spot_instance ? 0 : var.node_count -1
-  device_id = equinix_metal_device.join[count.index].id
-}
-
 data "equinix_metal_device" "seed_device" {
-   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.seed_req.0.device_ids[0] : data.equinix_metal_device.seed.0.device_id
+   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.seed_req.0.device_ids[0] : equinix_metal_device.seed.0.id
 }
 
 data "equinix_metal_device" "join_devices" {
    count     = var.node_count - 1
-   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0] : data.equinix_metal_device.join[count.index].device_id
+   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0] : equinix_metal_device.join[count.index].id
 }
 
 resource "equinix_metal_vlan" "vlans" {
