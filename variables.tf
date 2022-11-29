@@ -68,3 +68,8 @@ variable rancher_secret_key {
   default     = ""
   description = "Rancher secret key"
 }
+
+variable rancher_insecure {
+  default     = false
+  description = "Allow insecure connections to the Rancher API"
+}
