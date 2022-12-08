@@ -12,10 +12,12 @@ steps:
 
 - name: terraform-plan
   image: hashicorp/terraform:1.3.6
-  secrets: [ metal_auth_token ]
+  secrets: [ metal_auth_token, project_name ]
   environment:
     METAL_AUTH_TOKEN:
       from_secret: metal_auth_token
+    TF_VAR_project_name:
+      from_secret: project_name
   when:
     branch: main
   commands:
