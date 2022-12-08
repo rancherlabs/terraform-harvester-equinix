@@ -15,7 +15,7 @@ steps:
   secrets: [ metal_auth_token ]
   environment:
     METAL_AUTH_TOKEN:
-      from_secret: meta_auth_token
+      from_secret: metal_auth_token
   when:
     branch: main
   commands:
