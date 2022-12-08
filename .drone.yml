@@ -5,10 +5,18 @@ name: default
 steps:
 - name: terraform-init
   image: hashicorp/terraform:1.3.6
+  when:
+    branch: main
   commands:
     - "terraform init"
 
 - name: terraform-plan
   image: hashicorp/terraform:1.3.6
+  secrets: [ metal_auth_token ]
+  environment:
+    METAL_AUTH_TOKEN:
+      from_secret: meta_auth_token
+  when:
+    branch: main
   commands:
     - "terraform plan"
