@@ -22,3 +22,6 @@ steps:
     branch: main
   commands:
     - "terraform plan"
+---
+kind: signature
+hmac: 6da2ea7518a413c8c726cf1c83e3da064c3f31a398644b5a82ca59e552691e03
