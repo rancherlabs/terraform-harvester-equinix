@@ -49,10 +49,6 @@ resource "equinix_metal_spot_market_request" "seed_spot_request" {
   }
 }
 
-data "equinix_metal_spot_market_request" "seed_req" {
-  count      = var.spot_instance ? 1 : 0
-  request_id = equinix_metal_spot_market_request.seed_spot_request.0.id
-}
 
 resource "equinix_metal_ip_attachment" "first_address_assignment" {
   device_id     = var.spot_instance ? data.equinix_metal_spot_market_request.seed_req.0.device_ids[0] : equinix_metal_device.seed.0.id
@@ -91,20 +87,6 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   }
 }
 
-data "equinix_metal_spot_market_request" "join_req" {
-  count      = var.spot_instance ? var.node_count -1 : 0
-  request_id = equinix_metal_spot_market_request.join_spot_request[count.index].id
-}
-
-data "equinix_metal_device" "seed_device" {
-   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.seed_req.0.device_ids[0] : equinix_metal_device.seed.0.id
-}
-
-data "equinix_metal_device" "join_devices" {
-   count     = var.node_count - 1
-   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0] : equinix_metal_device.join[count.index].id
-}
-
 resource "equinix_metal_vlan" "vlans" {
   count = var.num_of_vlans
   project_id = data.equinix_metal_project.project.project_id
@@ -132,8 +114,3 @@ resource "rancher2_cluster" "rancher_cluster" {
   count = var.rancher_api_url != "" ? 1 : 0
   description = "${var.hostname_prefix} created by Terraform"
 }
-  
-output "harvester_url" {
-  value = "https://${equinix_metal_reserved_ip_block.harvester_vip.network}/"
-}
-
