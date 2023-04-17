@@ -27,7 +27,7 @@ variable "facility" {
 }
 
 variable "ipxe_script" {
-  default = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/ipxe/ipxe-"
+  default = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/main/ipxe/ipxe-"
 }
 
 variable "hostname_prefix" {
