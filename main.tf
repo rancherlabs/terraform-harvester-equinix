@@ -34,7 +34,7 @@ resource "equinix_metal_spot_market_request" "seed_spot_request" {
   count            = var.node_count >= 1 && var.spot_instance ? 1 : 0
   project_id       = data.equinix_metal_project.project.project_id
   max_bid_price    = var.max_bid_price
-  facilities       = [var.facility]
+  metro            = var.metro
   devices_min      = 1
   devices_max      = 1
   wait_for_devices = true
@@ -72,7 +72,7 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   count            = var.spot_instance ? var.node_count - 1 : 0
   project_id       = data.equinix_metal_project.project.project_id
   max_bid_price    = var.max_bid_price
-  facilities       = [var.facility]
+  metro            = var.metro
   devices_min      = 1
   devices_max      = 1
   wait_for_devices = true
@@ -90,7 +90,7 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
 resource "equinix_metal_vlan" "vlans" {
   count      = var.num_of_vlans
   project_id = data.equinix_metal_project.project.project_id
-  facility   = var.facility
+  metro      = var.metro
 }
 
 resource "equinix_metal_port_vlan_attachment" "vlan_attach_seed" {

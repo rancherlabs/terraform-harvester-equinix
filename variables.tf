@@ -22,10 +22,6 @@ variable "metro" {
   default = "SG"
 }
 
-variable "facility" {
-  default = "sg1"
-}
-
 variable "ipxe_script" {
   default = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/main/ipxe/ipxe-"
 }
