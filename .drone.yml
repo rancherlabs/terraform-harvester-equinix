@@ -3,15 +3,22 @@ type: docker
 name: default
 
 steps:
+- name: terraform-lint
+  image: hashicorp/terraform:1.4.5
+  when:
+    branch: main
+  commands:
+    - "terraform fmt -diff -check -recursive"
+
 - name: terraform-init
-  image: hashicorp/terraform:1.3.6
+  image: hashicorp/terraform:1.4.5
   when:
     branch: main
   commands:
     - "terraform init"
 
 - name: terraform-plan
-  image: hashicorp/terraform:1.3.6
+  image: hashicorp/terraform:1.4.5
   secrets: [ metal_auth_token, project_name ]
   environment:
     METAL_AUTH_TOKEN:
@@ -24,4 +31,4 @@ steps:
     - "terraform plan"
 ---
 kind: signature
-hmac: 6da2ea7518a413c8c726cf1c83e3da064c3f31a398644b5a82ca59e552691e03
+hmac: 6a3ad01dab6fe8667b011916dab5d23c95e5aa4a8990ba6299e005905b88972a
