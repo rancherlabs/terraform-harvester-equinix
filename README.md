@@ -13,3 +13,5 @@ By default the module will create a 2 node Harvester cluster.
 The Harvester console can be accessed using an Elastic IP created by the sample.
 
 A random token and password will be generated for your example.
+
+If you provide a Rancher API URL and keys, your Harvester environment can be managed by Rancher and a kubeconfig file will be saved locally.
