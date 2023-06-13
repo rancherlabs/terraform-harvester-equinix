@@ -4,21 +4,21 @@ name: default
 
 steps:
 - name: terraform-lint
-  image: hashicorp/terraform:1.4.5
+  image: hashicorp/terraform:1.5.0
   when:
     branch: main
   commands:
     - "terraform fmt -diff -check -recursive"
 
 - name: terraform-init
-  image: hashicorp/terraform:1.4.5
+  image: hashicorp/terraform:1.5.0
   when:
     branch: main
   commands:
     - "terraform init"
 
 - name: terraform-plan
-  image: hashicorp/terraform:1.4.5
+  image: hashicorp/terraform:1.5.0
   secrets: [ metal_auth_token, project_name ]
   environment:
     METAL_AUTH_TOKEN:
@@ -31,4 +31,4 @@ steps:
     - "terraform plan"
 ---
 kind: signature
-hmac: 6a3ad01dab6fe8667b011916dab5d23c95e5aa4a8990ba6299e005905b88972a
+hmac: 91759c0619998b25b3a5844f9f268d84f9a662336bec063713936d39c6e7bdb5
