@@ -114,3 +114,9 @@ resource "rancher2_cluster" "rancher_cluster" {
   count       = var.rancher_api_url != "" ? 1 : 0
   description = "${var.hostname_prefix} created by Terraform"
 }
+
+resource "local_file" "harvester_kubeconfig" {
+  count    = var.rancher_api_url != "" ? 1 : 0
+  content  = rancher2_cluster.rancher_cluster[0].kube_config
+  filename = "${var.hostname_prefix}-kubeconfig.yaml"
+}
