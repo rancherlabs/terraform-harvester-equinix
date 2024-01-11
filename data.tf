@@ -3,8 +3,13 @@ data "equinix_metal_project" "project" {
 }
 
 data "equinix_metal_ip_block_ranges" "address_block" {
+<<<<<<< HEAD
   project_id = local.project_id
   metro      = var.metro
+=======
+  project_id = data.equinix_metal_project.project.project_id
+  metro      = local.cheapest_metro_price.metro
+>>>>>>> acfa1e1 (initial commit for issue-15)
 }
 
 
