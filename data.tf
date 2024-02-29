@@ -8,8 +8,12 @@ data "equinix_metal_ip_block_ranges" "address_block" {
   metro      = var.metro
 =======
   project_id = data.equinix_metal_project.project.project_id
+<<<<<<< HEAD
   metro      = local.cheapest_metro_price.metro
 >>>>>>> acfa1e1 (initial commit for issue-15)
+=======
+  metro      = local.cheapest_metro_price.metro 
+>>>>>>> 1016292 (Dynamically grab pricing data and choose cheapest metro for spot pricing)
 }
 
 

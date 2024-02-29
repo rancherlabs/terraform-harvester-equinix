@@ -14,12 +14,16 @@ resource "random_password" "token" {
   special = false
 }
 
+<<<<<<< HEAD
 resource "equinix_metal_project" "new_project" {
   count = var.metal_create_project ? 1 : 0
   name  = var.project_name
 }
 
 // Find the cheapest metro
+=======
+# Find the most affordable metro
+>>>>>>> 1016292 (Dynamically grab pricing data and choose cheapest metro for spot pricing)
 
 provider "http" {}
 
@@ -33,24 +37,24 @@ data "http" "prices" {
 
 locals {
   machine_size = var.plan
-  pricing_data = jsondecode(data.http.prices.response_body)
-  cheapest_metro_prices = flatten([for metro, machines in local.pricing_data.spot_market_prices : [
+  pricing_data = try(jsondecode(data.http.prices.response_body), null)
+  least_bid_price_metro = can(local.pricing_data) ? flatten([for metro, machines in local.pricing_data.spot_market_prices : [
     for machine, details in machines : {
       metro   = metro
       machine = machine
       price   = details.price
     } if machine == local.machine_size
-  ]])
-  cheapest_metro_price = {
-    price = min([for price in local.cheapest_metro_prices : price.price]...),
-    metro = [for price in local.cheapest_metro_prices : price.metro if price.price == min([for price in local.cheapest_metro_prices : price.price]...)][0]
-  }
+  ]]) : []
+  cheapest_metro_price = length(local.least_bid_price_metro) > 0 ? {
+    price = min([for price in local.least_bid_price_metro : price.price]...),
+    metro = [for price in local.least_bid_price_metro : price.metro if price.price == min([for price in local.least_bid_price_metro : price.price]...)][0]
+  } : null
 }
 
 #output "http_response" {
 #  value = data.http.prices.response_body
 #}
-output "cheapest_price_metro" {
+output "least_bid_price_metro" {
   value = local.cheapest_metro_price.metro
 }
 
