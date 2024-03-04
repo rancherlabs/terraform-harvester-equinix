@@ -14,25 +14,9 @@ resource "random_password" "token" {
   special = false
 }
 
-<<<<<<< HEAD
 resource "equinix_metal_project" "new_project" {
   count = var.metal_create_project ? 1 : 0
   name  = var.project_name
-}
-
-// Find the cheapest metro
-=======
-# Find the most affordable metro
->>>>>>> 1016292 (Dynamically grab pricing data and choose cheapest metro for spot pricing)
-
-provider "http" {}
-
-data "http" "prices" {
-  url    = "https://api.equinix.com/metal/v1/market/spot/prices/metros"
-  method = "GET"
-  request_headers = {
-    "X-Auth-Token" = var.api_key
-  }
 }
 
 locals {
@@ -51,6 +35,7 @@ locals {
   } : null
 }
 
+## Keeping it commented for debugging purposes. Will remove once verified.
 #output "http_response" {
 #  value = data.http.prices.response_body
 #}

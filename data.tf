@@ -3,17 +3,8 @@ data "equinix_metal_project" "project" {
 }
 
 data "equinix_metal_ip_block_ranges" "address_block" {
-<<<<<<< HEAD
-  project_id = local.project_id
-  metro      = var.metro
-=======
   project_id = data.equinix_metal_project.project.project_id
-<<<<<<< HEAD
   metro      = local.cheapest_metro_price.metro
->>>>>>> acfa1e1 (initial commit for issue-15)
-=======
-  metro      = local.cheapest_metro_price.metro 
->>>>>>> 1016292 (Dynamically grab pricing data and choose cheapest metro for spot pricing)
 }
 
 
@@ -38,5 +29,12 @@ data "equinix_metal_device" "join_devices" {
   device_id = var.spot_instance ? data.equinix_metal_spot_market_request.join_req[count.index].device_ids[0] : equinix_metal_device.join[count.index].id
 }
 
+# Find the most affordable metro
 
-
+data "http" "prices" {
+  url    = "https://api.equinix.com/metal/v1/market/spot/prices/metros"
+  method = "GET"
+  request_headers = {
+    "X-Auth-Token" = var.api_key
+  }
+}
