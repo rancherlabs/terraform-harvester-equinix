@@ -1,5 +1,11 @@
+resource "equinix_metal_project" "new_project" {
+  count = var.metal_create_project ? 1 : 0
+  name  = var.project_name
+}
+
+
 data "equinix_metal_project" "project" {
-  name = var.project_name
+  name = var.metal_create_project ? equinix_metal_project.new_project[0].name : var.project_name
 }
 
 
