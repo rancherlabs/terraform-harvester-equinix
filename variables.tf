@@ -12,7 +12,7 @@ variable "project_name" {
 
 variable "metal_create_project" {
   type        = bool
-  default     = true
+  default     = false
   description = "Create a Metal Project if this is 'true'. Else use provided 'project_name'"
 }
 
