@@ -1,6 +1,6 @@
 locals {
   project_id = var.metal_create_project ? equinix_metal_project.new_project[0].id : data.equinix_metal_project.project.project_id
-  metro = lower(var.metro)
+  metro      = lower(var.metro)
 }
 
 // IP attachment to be added to seed node, and this is subsequently assigned as Harvester vip
