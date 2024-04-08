@@ -1,0 +1,57 @@
+name: Terraform Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+
+  pull_request:
+
+jobs:
+  terraform-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Terraform Format Check
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.0
+        if: github.ref == 'refs/heads/main'
+        env:
+          TF_ACTION: fmt
+          TF_COMMAND: "terraform fmt -diff -check -recursive"
+          
+  terraform-init:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Terraform Init
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.0
+        if: github.ref == 'refs/heads/main'
+        env:
+          TF_ACTION: init
+          TF_COMMAND: "terraform init"
+          
+  terraform-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Terraform Plan
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.0
+        if: github.ref == 'refs/heads/main'
+        env:
+          TF_ACTION: plan
+          TF_COMMAND: "terraform plan"
+          METAL_AUTH_TOKEN: ${{ secrets.metal_auth_token }}
+          TF_VAR_project_name: ${{ secrets.project_name }}
