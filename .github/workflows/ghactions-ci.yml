@@ -14,38 +14,41 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Terraform Format Check
-        id: fmt
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
-        run: terraform fmt -diff -check -recursive"
-          
+        env:
+          TF_ACTION: fmt
+          TF_COMMAND: "terraform fmt -diff -check -recursive"
+
   terraform-init:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Terraform Init
-        id: init
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
-        run: terraform init
-  
+        env:
+          TF_ACTION: init
+          TF_COMMAND: "terraform init"
+
   terraform-plan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Terraform Plan
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.5
-        run: terraform plan
         env:
+          TF_ACTION: plan
+          TF_COMMAND: "terraform plan"
           METAL_AUTH_TOKEN: ${{ secrets.metal_auth_token }}
           TF_VAR_project_name: ${{ secrets.project_name }}
