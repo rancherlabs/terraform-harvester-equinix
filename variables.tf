@@ -75,3 +75,14 @@ variable "rancher_insecure" {
   default     = false
   description = "Allow insecure connections to the Rancher API"
 }
+variable "api_key" {
+  type        = string
+  description = "Equinix Metal authentication token"
+  default     = ""
+}
+
+variable "use_cheapest_metro" {
+  description = "A boolean variable to control cheapest metro selection"
+  type        = bool
+  default     = true
+}
