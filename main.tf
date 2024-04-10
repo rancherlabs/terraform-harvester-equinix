@@ -1,6 +1,5 @@
 locals {
   project_id = var.metal_create_project ? equinix_metal_project.new_project[0].id : data.equinix_metal_project.project.project_id
-  metro      = lower(var.metro)
 }
 
 // IP attachment to be added to seed node, and this is subsequently assigned as Harvester vip
@@ -22,7 +21,7 @@ resource "equinix_metal_project" "new_project" {
 
 resource "equinix_metal_reserved_ip_block" "harvester_vip" {
   project_id = local.project_id
-  metro      = local.metro
+  metro      = var.metro
   type       = "public_ipv4"
   quantity   = 1
 }
@@ -31,7 +30,7 @@ resource "equinix_metal_device" "seed" {
   hostname         = "${var.hostname_prefix}-1"
   count            = var.node_count >= 1 && !var.spot_instance ? 1 : 0
   plan             = var.plan
-  metro            = local.metro
+  metro            = var.metro
   operating_system = "custom_ipxe"
   billing_cycle    = var.billing_cylce
   project_id       = local.project_id
@@ -44,7 +43,7 @@ resource "equinix_metal_spot_market_request" "seed_spot_request" {
   count            = var.node_count >= 1 && var.spot_instance ? 1 : 0
   project_id       = local.project_id
   max_bid_price    = var.max_bid_price
-  metro            = local.metro
+  metro            = var.metro
   devices_min      = 1
   devices_max      = 1
   wait_for_devices = true
@@ -69,7 +68,7 @@ resource "equinix_metal_device" "join" {
   hostname         = "${var.hostname_prefix}-${count.index + 2}"
   count            = var.spot_instance ? 0 : var.node_count - 1
   plan             = var.plan
-  metro            = local.metro
+  metro            = var.metro
   operating_system = "custom_ipxe"
   billing_cycle    = var.billing_cylce
   project_id       = local.project_id
@@ -82,7 +81,7 @@ resource "equinix_metal_spot_market_request" "join_spot_request" {
   count            = var.spot_instance ? var.node_count - 1 : 0
   project_id       = local.project_id
   max_bid_price    = var.max_bid_price
-  metro            = local.metro
+  metro            = var.metro
   devices_min      = 1
   devices_max      = 1
   wait_for_devices = true
@@ -101,7 +100,7 @@ resource "equinix_metal_vlan" "vlans" {
   count       = var.num_of_vlans
   description = "VLAN for ${var.hostname_prefix}"
   project_id  = local.project_id
-  metro       = local.metro
+  metro       = var.metro
 }
 
 resource "equinix_metal_port_vlan_attachment" "vlan_attach_seed" {
