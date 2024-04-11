@@ -31,3 +31,8 @@ jobs:
         env:
           METAL_AUTH_TOKEN: ${{ secrets.metal_auth_token }}
           TF_VAR_project_name: ${{ secrets.project_name }}
+          TF_VAR_api_key: ${{ secrets.metal_auth_token }}
+          TF_VAR_node_count: 3
+          TF_VAR_plan: m3.small.x86
+          TF_VAR_spot_instance: true
+          TF_VAR_num_of_vlans: 10 

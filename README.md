@@ -6,6 +6,8 @@ The user needs to provide two environment variables:
 
 `METAL_AUTH_TOKEN` API token to access your Equinix account
 
+`TF_VAR_api_key` API token to access your Equinix account.
+
 `TF_VAR_project_name` Terraform variable to identify project in your Equinix account.
 
 Optionally the user can also provide:
