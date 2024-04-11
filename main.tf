@@ -43,7 +43,7 @@ locals {
 
 resource "equinix_metal_reserved_ip_block" "harvester_vip" {
   project_id = local.project_id
-  metro      = local.metro
+  metro      = var.metro
   type       = "public_ipv4"
   quantity   = 1
 }
@@ -52,7 +52,7 @@ resource "equinix_metal_device" "seed" {
   hostname         = "${var.hostname_prefix}-1"
   count            = var.node_count >= 1 && !var.spot_instance ? 1 : 0
   plan             = var.plan
-  metro            = local.metro
+  metro            = var.metro
   operating_system = "custom_ipxe"
   billing_cycle    = var.billing_cylce
   project_id       = local.project_id
@@ -90,7 +90,7 @@ resource "equinix_metal_device" "join" {
   hostname         = "${var.hostname_prefix}-${count.index + 2}"
   count            = var.spot_instance ? 0 : var.node_count - 1
   plan             = var.plan
-  metro            = local.metro
+  metro            = var.metro
   operating_system = "custom_ipxe"
   billing_cycle    = var.billing_cylce
   project_id       = local.project_id
@@ -122,7 +122,7 @@ resource "equinix_metal_vlan" "vlans" {
   count       = var.num_of_vlans
   description = "VLAN for ${var.hostname_prefix}"
   project_id  = local.project_id
-  metro       = local.metro
+  metro       = var.metro
 }
 
 resource "equinix_metal_port_vlan_attachment" "vlan_attach_seed" {
