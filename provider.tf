@@ -1,4 +1,8 @@
 terraform {
+  required_version = ">= 1.0"
+  provider_meta "equinix" {
+    module_name = "harvester-equinix"
+  }
   required_providers {
     equinix = {
       source  = "equinix/equinix"
