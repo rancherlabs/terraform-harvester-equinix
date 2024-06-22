@@ -16,7 +16,7 @@ Optionally the user can also provide:
 
 You can overwrite any values in variables.tf by using .tfvars files or [other means](https://www.terraform.io/language/values/variables#assigning-values-to-root-module-variables)
 
-By default the module will create a 2 node Harvester cluster.
+By default the module will create a 3 node Harvester cluster.
 
 The Harvester console can be accessed using an Elastic IP created by the sample.
 
