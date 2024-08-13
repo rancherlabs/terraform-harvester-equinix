@@ -6,7 +6,7 @@ terraform {
   required_providers {
     equinix = {
       source  = "equinix/equinix"
-      version = "2.2.0"
+      version = "2.3.2"
     }
     rancher2 = {
       source  = "rancher/rancher2"
