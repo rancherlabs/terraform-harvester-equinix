@@ -1,0 +1,12 @@
+harvester_version = "v1.1.1"
+hostname_prefix   = "test-harvester" #better to add your name as prefix.
+node_count        = "2"
+project_name      = "Harvester Labs"
+plan              = "m3.small.x86"
+#max_bid_price     = "0.17"
+metro             = "SV"
+#facility          = "sg4"
+spot_instance     = true
+ssh_key           = ""   #add your machine's ssh key here.
+num_of_vlans = 2
+use_cheapest_metro = true  #This will pick cheapest metro availablie.
