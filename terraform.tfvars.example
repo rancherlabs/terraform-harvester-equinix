@@ -1,0 +1,11 @@
+harvester_version = "v1.3.1"
+hostname_prefix   = "test-harvester"
+node_count        = "3"
+project_name      = "Harvester Labs"
+plan              = "m3.small.x86"
+#max_bid_price     = "0.17"
+metro             = "SV"
+spot_instance     = true
+ssh_key           = ""   
+num_of_vlans = 0
+use_cheapest_metro = true 
