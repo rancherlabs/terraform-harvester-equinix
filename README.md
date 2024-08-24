@@ -23,3 +23,7 @@ The Harvester console can be accessed using an Elastic IP created by the sample.
 A random token and password will be generated for your example.
 
 If you provide a Rancher API URL and keys, your Harvester environment can be managed by Rancher and a kubeconfig file will be saved locally.
+
+### Using `terraform.tfvars.example` to Override Variable Values
+
+You can use the `terraform.tfvars.example` file to override the default values in `variables.tf`. To do this, rename the example File from `terraform.tfvars.example` to `terraform.tfvars`.
