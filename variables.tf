@@ -1,13 +1,16 @@
 variable "harvester_version" {
-  default = "v1.1.2"
+  description = "Harvester version to be installed"
+  default     = "v1.1.2"
 }
 
 variable "node_count" {
-  default = "3"
+  description = "Number of nodes to deploy Harvester cluster"
+  default     = "3"
 }
 
 variable "project_name" {
-  default = ""
+  description = "Name of the Equinix metal Project"
+  default     = ""
 }
 
 variable "metal_create_project" {
@@ -17,23 +20,28 @@ variable "metal_create_project" {
 }
 
 variable "plan" {
-  default = "c3.small.x86"
+  description = "Size of the servers to be deployed on Equinix metal"
+  default     = "c3.small.x86"
 }
 
 variable "billing_cylce" {
-  default = "hourly"
+  description = "Equinix metal billing/invoice generation schedule"
+  default     = "hourly"
 }
 
 variable "metro" {
-  default = "SG"
+  description = "Equinix metal data center location. Examples: SG,SV,AM,MA,Ny,LA,etc."
+  default     = "SG"
 }
 
 variable "ipxe_script" {
-  default = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/main/ipxe/ipxe-"
+  description = "URL for booting the servers with IPXE"
+  default     = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/main/ipxe/ipxe-"
 }
 
 variable "hostname_prefix" {
-  default = "harvester-pxe"
+  description = "Prefix for resources to be created in equinix metal"
+  default     = "harvester-pxe"
 }
 
 variable "spot_instance" {
