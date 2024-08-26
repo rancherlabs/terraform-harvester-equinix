@@ -1,13 +1,16 @@
 variable "harvester_version" {
-  default = "v1.1.2"
+  default     = "v1.1.2"
+  description = "Harvester version to be installed"
 }
 
 variable "node_count" {
-  default = "3"
+  default     = "3"
+  description = "Number of nodes to deploy Harvester cluster"
 }
 
 variable "project_name" {
-  default = ""
+  default     = ""
+  description = "Name of the Equinix metal project"
 }
 
 variable "metal_create_project" {
@@ -17,23 +20,28 @@ variable "metal_create_project" {
 }
 
 variable "plan" {
-  default = "c3.small.x86"
+  default     = "c3.small.x86"
+  description = "Size of the servers to be deployed on Equinix metal"
 }
 
 variable "billing_cylce" {
-  default = "hourly"
+  default     = "hourly"
+  description = "Equinix metal billing/invoice generation schedule"
 }
 
 variable "metro" {
-  default = "SG"
+  default     = "SG"
+  description = "Equinix metal data center location. Examples: SG,SV,AM,MA,Ny,LA,etc."
 }
 
 variable "ipxe_script" {
-  default = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/main/ipxe/ipxe-"
+  default     = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/main/ipxe/ipxe-"
+  description = "URL for booting the servers with IPXE"
 }
 
 variable "hostname_prefix" {
-  default = "harvester-pxe"
+  default     = "harvester-pxe"
+  description = "Prefix for resources to be created in equinix metal"
 }
 
 variable "spot_instance" {
@@ -77,12 +85,12 @@ variable "rancher_insecure" {
 }
 variable "api_key" {
   type        = string
-  description = "Equinix Metal authentication token"
   default     = ""
+  description = "Equinix Metal authentication token"
 }
 
 variable "use_cheapest_metro" {
-  description = "A boolean variable to control cheapest metro selection"
   type        = bool
   default     = true
+  description = "A boolean variable to control cheapest metro selection"
 }
