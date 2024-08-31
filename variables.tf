@@ -24,7 +24,7 @@ variable "plan" {
   description = "Size of the servers to be deployed on Equinix metal"
 }
 
-variable "billing_cylce" {
+variable "billing_cycle" {
   default     = "hourly"
   description = "Equinix metal billing/invoice generation schedule"
 }
