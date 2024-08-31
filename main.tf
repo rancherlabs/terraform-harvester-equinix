@@ -54,7 +54,7 @@ resource "equinix_metal_device" "seed" {
   plan             = var.plan
   metro            = local.metro
   operating_system = "custom_ipxe"
-  billing_cycle    = var.billing_cylce
+  billing_cycle    = var.billing_cycle
   project_id       = local.project_id
   ipxe_script_url  = "${var.ipxe_script}${element(split("v", var.harvester_version), 1)}"
   always_pxe       = "false"
@@ -92,7 +92,7 @@ resource "equinix_metal_device" "join" {
   plan             = var.plan
   metro            = local.metro
   operating_system = "custom_ipxe"
-  billing_cycle    = var.billing_cylce
+  billing_cycle    = var.billing_cycle
   project_id       = local.project_id
   ipxe_script_url  = "${var.ipxe_script}${element(split("v", var.harvester_version), 1)}"
   always_pxe       = "false"
