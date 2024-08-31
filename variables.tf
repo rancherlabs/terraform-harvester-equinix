@@ -1,5 +1,5 @@
 variable "harvester_version" {
-  default     = "v1.1.2"
+  default     = "v1.3.1"
   description = "Harvester version to be installed"
 }
 
@@ -35,7 +35,7 @@ variable "metro" {
 }
 
 variable "ipxe_script" {
-  default     = "https://raw.githubusercontent.com/rancherlabs/harvester-equinix-terraform/main/ipxe/ipxe-"
+  default     = "https://raw.githubusercontent.com/rancherlabs/terraform-harvester-equinix/main/ipxe/ipxe-"
   description = "URL for booting the servers with IPXE"
 }
 
