@@ -1,10 +1,24 @@
 data "equinix_metal_project" "project" {
-  name = var.metal_create_project ? equinix_metal_project.new_project[0].name : var.project_name
+  count = var.metal_create_project ? 0 : 1
+
+  name       = var.project_name == "" ? null : var.project_name
+  project_id = var.project_id == "" ? null : var.project_id
+
+  lifecycle {
+    precondition {
+      condition     = !(var.project_name != "" && var.project_id != "")
+      error_message = "Only one of project_name or project_id can be set"
+    }
+    precondition {
+      condition     = var.project_name != "" || var.project_id != ""
+      error_message = "One of project_name or project_id must be set when metal_create_project is false"
+    }
+  }
 }
 
 data "equinix_metal_ip_block_ranges" "address_block" {
   project_id = local.project_id
-  metro      = var.use_cheapest_metro ? local.cheapest_metro_price.metro : var.metro
+  metro      = (var.spot_instance && var.use_cheapest_metro) ? local.cheapest_metro_price.metro : var.metro
 }
 
 
@@ -30,7 +44,7 @@ data "equinix_metal_device" "join_devices" {
 }
 
 data "http" "prices" {
-  count  = var.use_cheapest_metro ? 1 : 0
+  count  = var.spot_instance && var.use_cheapest_metro ? 1 : 0
   url    = "https://api.equinix.com/metal/v1/market/spot/prices/metros"
   method = "GET"
   request_headers = {

@@ -1,6 +1,6 @@
 variable "harvester_version" {
   default     = "v1.3.1"
-  description = "Harvester version to be installed"
+  description = "Harvester version to be installed (Must be a valid version tag from https://github.com/rancherlabs/terraform-harvester-equinix/tree/main/ipxe)"
 }
 
 variable "node_count" {
@@ -10,7 +10,17 @@ variable "node_count" {
 
 variable "project_name" {
   default     = ""
-  description = "Name of the Equinix metal project"
+  description = "Name of the Equinix Metal project to deploy into, when not looking up by project_id"
+}
+
+variable "organization_id" {
+  description = "Equinix Metal organization ID to create or find a project in"
+  default     = ""
+}
+
+variable "project_id" {
+  description = "Equinix Metal project ID to deploy into, if not creating a new project or looking up by name"
+  default     = ""
 }
 
 variable "metal_create_project" {
@@ -21,22 +31,22 @@ variable "metal_create_project" {
 
 variable "plan" {
   default     = "c3.small.x86"
-  description = "Size of the servers to be deployed on Equinix metal"
+  description = "Size of the servers to be deployed on Equinix metal (https://deploy.equinix.com/developers/docs/metal/hardware/standard-servers/)"
 }
 
 variable "billing_cycle" {
   default     = "hourly"
-  description = "Equinix metal billing/invoice generation schedule"
+  description = "Equinix metal billing/invoice generation schedule (hourly/daily/monthly/yearly)"
 }
 
 variable "metro" {
   default     = "SG"
-  description = "Equinix metal data center location. Examples: SG,SV,AM,MA,Ny,LA,etc."
+  description = "Equinix metal data center location (https://deploy.equinix.com/developers/docs/metal/locations/metros/). Examples: SG,SV,AM,MA,Ny,LA,etc."
 }
 
 variable "ipxe_script" {
   default     = "https://raw.githubusercontent.com/rancherlabs/terraform-harvester-equinix/main/ipxe/ipxe-"
-  description = "URL for booting the servers with IPXE"
+  description = "URL to the iPXE script to use for booting the server (harvester_version will be appended to this without the 'v' prefix)"
 }
 
 variable "hostname_prefix" {
@@ -46,7 +56,7 @@ variable "hostname_prefix" {
 
 variable "spot_instance" {
   default     = false
-  description = "Set to true to use spot instance instead of on demand. Also set you max bid price if true."
+  description = "Set to true to use spot instance instead of on demand. Also set your max bid price if true."
 }
 
 variable "max_bid_price" {
@@ -92,5 +102,5 @@ variable "api_key" {
 variable "use_cheapest_metro" {
   type        = bool
   default     = true
-  description = "A boolean variable to control cheapest metro selection"
+  description = "Equinix Metal authentication token. Required when using Spot Instances for HTTP pricing lookups. METAL_AUTH_TOKEN should always be set as an environment variable."
 }

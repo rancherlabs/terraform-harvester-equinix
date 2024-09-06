@@ -1,6 +1,6 @@
 locals {
-  project_id = var.metal_create_project ? equinix_metal_project.new_project[0].id : data.equinix_metal_project.project.project_id
-  metro      = var.use_cheapest_metro ? local.cheapest_metro_price.metro : lower(var.metro)
+  project_id = var.metal_create_project ? equinix_metal_project.new_project[0].id : data.equinix_metal_project.project[0].project_id
+  metro      = (var.spot_instance && var.use_cheapest_metro) ? local.cheapest_metro_price.metro : lower(var.metro)
 }
 
 // IP attachment to be added to seed node, and this is subsequently assigned as Harvester vip
@@ -16,13 +16,14 @@ resource "random_password" "token" {
 }
 
 resource "equinix_metal_project" "new_project" {
-  count = var.metal_create_project ? 1 : 0
-  name  = var.project_name
+  count           = var.metal_create_project ? 1 : 0
+  name            = var.project_name
+  organization_id = var.organization_id == "" ? null : var.organization_id
 }
 
 locals {
   machine_size = var.plan
-  pricing_data = var.use_cheapest_metro ? try(jsondecode(data.http.prices[0].response_body), null) : null
+  pricing_data = (var.spot_instance && var.use_cheapest_metro) ? try(jsondecode(data.http.prices[0].response_body), null) : null
   least_bid_price_metro = can(local.pricing_data) && can(local.pricing_data.spot_market_prices) ? flatten([for metro, machines in local.pricing_data.spot_market_prices : [
     for machine, details in machines : {
       metro   = metro
