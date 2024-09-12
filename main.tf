@@ -1,6 +1,6 @@
 locals {
   project_id = var.metal_create_project ? equinix_metal_project.new_project[0].id : data.equinix_metal_project.project[0].project_id
-  metro      = (var.spot_instance && var.use_cheapest_metro) ? local.cheapest_metro_price.metro : lower(var.metro)
+  metro      = (var.spot_instance && var.use_cheapest_metro && local.cheapest_metro_price != null) ? local.cheapest_metro_price.metro : lower(var.metro)
 }
 
 // IP attachment to be added to seed node, and this is subsequently assigned as Harvester vip
@@ -65,7 +65,7 @@ resource "equinix_metal_device" "seed" {
 resource "equinix_metal_spot_market_request" "seed_spot_request" {
   count            = var.node_count >= 1 && var.spot_instance ? 1 : 0
   project_id       = local.project_id
-  max_bid_price    = var.use_cheapest_metro ? local.cheapest_metro_price.price : var.max_bid_price
+  max_bid_price    = (var.use_cheapest_metro && local.cheapest_metro_price != null) ? local.cheapest_metro_price.price : var.max_bid_price
   metro            = local.metro
   devices_min      = 1
   devices_max      = 1
@@ -103,7 +103,7 @@ resource "equinix_metal_device" "join" {
 resource "equinix_metal_spot_market_request" "join_spot_request" {
   count            = var.spot_instance ? var.node_count - 1 : 0
   project_id       = local.project_id
-  max_bid_price    = var.use_cheapest_metro ? local.cheapest_metro_price.price : var.max_bid_price
+  max_bid_price    = (var.use_cheapest_metro && local.cheapest_metro_price != null) ? local.cheapest_metro_price.price : var.max_bid_price
   metro            = local.metro
   devices_min      = 1
   devices_max      = 1

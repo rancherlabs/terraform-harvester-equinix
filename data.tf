@@ -18,7 +18,7 @@ data "equinix_metal_project" "project" {
 
 data "equinix_metal_ip_block_ranges" "address_block" {
   project_id = local.project_id
-  metro      = (var.spot_instance && var.use_cheapest_metro) ? local.cheapest_metro_price.metro : var.metro
+  metro      = (var.spot_instance && var.use_cheapest_metro && local.cheapest_metro_price != null) ? local.cheapest_metro_price.metro : var.metro
 }
 
 
