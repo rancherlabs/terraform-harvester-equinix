@@ -12,3 +12,15 @@ output "out_of_band_hostnames" {
   value       = concat([data.equinix_metal_device.seed_device.sos_hostname], data.equinix_metal_device.join_devices.*.sos_hostname)
   description = "Out of band hostnames for SSH access to the console"
 }
+
+output "harvester_os_password" {
+  value       = random_password.password.result
+  description = "The password for the default OS user, 'rancher' (https://docs.harvesterhci.io/v1.3/install/harvester-configuration/#ospassword)"
+  sensitive   = true
+}
+
+output "harvester_cluster_secret" {
+  value       = random_password.token.result
+  description = "The cluster secret for joining nodes to the cluster (https://docs.harvesterhci.io/v1.3/install/harvester-configuration/#token)"
+  sensitive   = true
+}
