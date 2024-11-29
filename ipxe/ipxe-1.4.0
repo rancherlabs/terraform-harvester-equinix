@@ -3,7 +3,7 @@ set version v1.4.0
 set base https://github.com/harvester/harvester/releases/download/${version}
 set harvesterreleasebase https://releases.rancher.com/harvester/${version}
 dhcp
-iflinkwait -t 10000
+iflinkwait -t 5000
 goto ${ifname}
 :net0
 set address ${net0/mac}
