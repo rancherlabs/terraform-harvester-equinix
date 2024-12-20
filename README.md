@@ -1,22 +1,19 @@
 ## Harvester on Equinix
 
-Simple example using the terraform equinix provider to create a multi node harvester cluster.
+This project demonstrates using the [Terraform Equinix provider](https://deploy.equinix.com/labs/terraform-provider-equinix/) to create a multi-node Harvester cluster.
 
-The user needs to provide two environment variables:
+The user needs to provide three environment variables:
 
-`METAL_AUTH_TOKEN` API token to access your Equinix account
-
-`TF_VAR_api_key` API token to access your Equinix account (needed when Spot Market is enabled)
-
-`TF_VAR_project_name` or `TF_VAR_project_id` Terraform variable to identify project in your Equinix account.
-
-Optionally the user can also provide:
-
-`TF_VAR_metal_create_project` Terraform variable to create a project of name `TF_VAR_project_name` if it does not exist.
+* `METAL_AUTH_TOKEN`: API token to access your Equinix account through the Terraform Provider
+* `TF_VAR_api_key`: API token to access your Equinix Metal account through the http Provider (needed only for Spot Market pricing)
+* `TF_VAR_project_id`: Terraform variable to identify the project in your Equinix account
+  
+   Alternatively, the user can provide:
+   `TF_VAR_metal_create_project`: create a project named `TF_VAR_project_name` if it does not exist
 
 You can overwrite any values in `variables.tf` by using `.tfvars` files or [other means](https://www.terraform.io/language/values/variables#assigning-values-to-root-module-variables)
 
-By default the module will create a 3 node Harvester cluster.
+By default, the module will create a 3-node Harvester cluster.
 
 The Harvester console can be accessed using an Elastic IP created by the sample.
 
@@ -27,7 +24,7 @@ terraform output -raw harvester_os_password
 terraform output -raw harvester_cluster_secret
 ```
 
-If you provide a Rancher API URL and keys, your Harvester environment can be managed by Rancher and a kubeconfig file will be saved locally.
+If you provide a Rancher API URL and keys, Rancher can manage your Harvester environment, and a `kubeconfig` file will be saved locally.
 
 ### Using `terraform.tfvars.example` to Override Variable Values
 
